@@ -37,11 +37,10 @@ def save_to_html(link, line, new_soup):
 	response = urllib.urlopen(link)
 	result = response.read()
 	soup = BeautifulSoup(result, "html.parser")
-	for table in soup.find_all('table'):
-		p = table.find('p')
-		#print p
+	for p in soup.find_all('p', attrs={'class':None}):
+		print p
 		if p != None:
-			new_soup.append(table)
+			new_soup.append(p)
 
 url = sys.argv[1]
 
