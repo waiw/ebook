@@ -38,28 +38,32 @@ def save_to_html(link, line, new_soup):
 	result = response.read()
 	soup = BeautifulSoup(result, "html.parser")
 	for p in soup.find_all('p', attrs={'class':None}):
-		print p
+		#print p
 		if p != None:
 			new_soup.append(p)
 
-url = sys.argv[1]
 
-response = urllib.urlopen(url)
-result = response.read()
-soup = BeautifulSoup(result, "html.parser")
-new_soup = BeautifulSoup("<head></head><body><h2></h2><h3></h3><p></p><dl></dl></body>")
-print soup.title.string.encode('utf-8')
-log = open(soup.title.string+".html", "w")
-for line in soup.dl.find_all('a', href=True):
-	url2 = url + line['href']
-	save_to_html(url2, line, new_soup.body)
-	line['href'] = '#'+line['href'].strip('.html')
-	# test with just one file
-	#break
-new_soup.head.replace_with(soup.head)
-new_soup.h2.replace_with(soup.body.h2)
-new_soup.h3.replace_with(soup.body.h3)
-new_soup.p.replace_with(soup.body.p)
-new_soup.dl.replace_with(soup.body.dl)
-log.write(str(new_soup))
-log.close()
+def get_book(url):
+	response = urllib.urlopen(url)
+	result = response.read()
+	soup = BeautifulSoup(result, "html.parser")
+	new_soup = BeautifulSoup("<head></head><body><h2></h2><h3></h3><p></p><dl></dl></body>")
+	print soup.title.string.encode('utf-8')
+	log = open(soup.title.string+".html", "w")
+	for line in soup.dl.find_all('a', href=True):
+		url2 = url + line['href']
+		save_to_html(url2, line, new_soup.body)
+		line['href'] = '#'+line['href'].strip('.html')
+		# test with just one file
+		#break
+	new_soup.head.replace_with(soup.head)
+	new_soup.h2.replace_with(soup.body.h2)
+	new_soup.h3.replace_with(soup.body.h3)
+	new_soup.p.replace_with(soup.body.p)
+	new_soup.dl.replace_with(soup.body.dl)
+	log.write(str(new_soup))
+	log.close()
+
+
+#url = sys.argv[1]
+#get_book(url)
